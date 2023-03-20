@@ -19,8 +19,4 @@ public class BookaroOnlineStoreApplication {
 		System.out.println(context);
 	}
 
-	@Bean
-	String query() {
-		return "Pan";
-	}
 }
