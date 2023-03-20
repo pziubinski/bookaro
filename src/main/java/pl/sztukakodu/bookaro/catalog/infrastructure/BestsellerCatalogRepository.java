@@ -11,8 +11,7 @@ import pl.sztukakodu.bookaro.catalog.domain.Book;
 import pl.sztukakodu.bookaro.catalog.domain.CatalogRepository;
 
 @Repository
-public class BestsellerCatalogRepository implements CatalogRepository {
-
+class BestsellerCatalogRepository implements CatalogRepository {
     private final Map<Long, Book> storage = new ConcurrentHashMap<>();
 
     public BestsellerCatalogRepository() {

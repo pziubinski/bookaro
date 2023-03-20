@@ -11,13 +11,23 @@ import pl.sztukakodu.bookaro.catalog.application.CatalogController;
 import pl.sztukakodu.bookaro.catalog.domain.Book;
 
 @Component
-@RequiredArgsConstructor
 public class ApplicationStartup implements CommandLineRunner {
     private final CatalogController catalogController;
+    private final String title;
+    private final Long limit;
+
+    public ApplicationStartup(
+            CatalogController catalogController,
+            @Value("${bookaro.catalog.query}") String title,
+            @Value("${bookaro.catalog.limit:3}") Long limit) {
+        this.catalogController = catalogController;
+        this.title = title;
+        this.limit = limit;
+    }
 
     @Override
-    public void run(String... args) throws Exception {
-        List<Book> books = catalogController.findByTitle("Pan");
-        books.forEach(System.out::println);
+    public void run(String... args) {
+        List<Book> books = catalogController.findByTitle(title);
+        books.stream().limit(limit).forEach(System.out::println);
     }
 }

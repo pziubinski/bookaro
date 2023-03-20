@@ -3,20 +3,16 @@ package pl.sztukakodu.bookaro.catalog.domain;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CatalogService {
-
     private final CatalogRepository repository;
-
 
     public CatalogService(@Qualifier("schoolCatalogRepository") CatalogRepository repository) {
         this.repository = repository;
     }
-
 
     public List<Book> findByTitle(String title) {
         return repository.findAll()
