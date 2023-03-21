@@ -56,13 +56,13 @@ public class ApplicationStartup implements CommandLineRunner {
         System.out.println("Updating book...");
         catalog.findOneByTitleAndAuthor("Pan Tadeusz", "Adam Mickiewicz")
                 .ifPresent(book -> {
-                    UpdateBookCommand command = new UpdateBookCommand(
-                            book.getId(),
-                            "Pan Tadeusz, czyli Ostatni Zajazd na Litwie",
-                            book.getAuthor(),
-                            book.getYear()
-                    );
-                    catalog.updateBook(command);
+                    UpdateBookCommand command = UpdateBookCommand
+                            .builder()
+                            .id(book.getId())
+                            .title("Pan Tadeusz, czyli Ostatni Zajazd na Litwie")
+                            .build();
+                    UpdateBookResponse response = catalog.updateBook(command);
+                    System.out.println("Updating book result: " + response.isSuccess());
                 });
     }
 

@@ -1,5 +1,6 @@
 package pl.sztukakodu.bookaro.catalog.application.port;
 
+import lombok.Builder;
 import lombok.Value;
 import pl.sztukakodu.bookaro.catalog.domain.Book;
 
@@ -8,19 +9,19 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CatalogUseCase {
+    List<Book> findAll();
+
     List<Book> findByTitle(String title);
 
     List<Book> findByAuthor(String author);
-
-    List<Book> findAll();
 
     Optional<Book> findOneByTitleAndAuthor(String title, String author);
 
     void addBook(CreateBookCommand command);
 
-    void removeById(Long id);
-
     UpdateBookResponse updateBook(UpdateBookCommand command);
+
+    void removeById(Long id);
 
     @Value
     class CreateBookCommand {
@@ -30,11 +31,25 @@ public interface CatalogUseCase {
     }
 
     @Value
+    @Builder
     class UpdateBookCommand {
         Long id;
         String title;
         String author;
         Integer year;
+
+       public Book updateFields(Book book) {
+            if (title != null) {
+                book.setTitle(title);
+            }
+            if (author != null) {
+                book.setAuthor(author);
+            }
+            if (year != null) {
+                book.setYear(year);
+            }
+            return book;
+        }
     }
 
     @Value
