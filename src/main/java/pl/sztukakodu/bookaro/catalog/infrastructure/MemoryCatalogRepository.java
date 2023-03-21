@@ -15,7 +15,7 @@ import pl.sztukakodu.bookaro.catalog.domain.CatalogRepository;
 @Repository
 class MemoryCatalogRepository implements CatalogRepository {
     private final Map<Long, Book> storage = new ConcurrentHashMap<>();
-    private final AtomicLong ID_NEXT_VALUE = new AtomicLong(0L);
+    private final AtomicLong NEXT_ID = new AtomicLong(0L);
 
     @Override
     public List<Book> findAll() {
@@ -44,6 +44,6 @@ class MemoryCatalogRepository implements CatalogRepository {
     }
 
     private long nextId() {
-        return ID_NEXT_VALUE.getAndIncrement();
+        return NEXT_ID.getAndIncrement();
     }
 }

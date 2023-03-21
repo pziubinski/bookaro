@@ -10,7 +10,5 @@ public class BookaroOnlineStoreApplication {
 	public static void main(String[] args) {
 
 		ConfigurableApplicationContext context = SpringApplication.run(BookaroOnlineStoreApplication.class, args);
-		System.out.println(context);
 	}
-
 }
