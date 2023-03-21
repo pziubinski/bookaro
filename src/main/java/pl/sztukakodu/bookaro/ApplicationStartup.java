@@ -10,6 +10,8 @@ import pl.sztukakodu.bookaro.catalog.domain.Book;
 import pl.sztukakodu.bookaro.catalog.application.port.CatalogUseCase;
 import pl.sztukakodu.bookaro.catalog.application.port.CatalogUseCase.CreateBookCommand;
 
+import static pl.sztukakodu.bookaro.catalog.application.port.CatalogUseCase.*;
+
 @Component
 public class ApplicationStartup implements CommandLineRunner {
     private final CatalogUseCase catalog;
@@ -32,6 +34,8 @@ public class ApplicationStartup implements CommandLineRunner {
     public void run(String... args) {
         initData();
         findByTitle();
+        findAndUpdate();
+        findByTitle();
         findByAuthor();
     }
 
@@ -46,6 +50,20 @@ public class ApplicationStartup implements CommandLineRunner {
         List<Book> booksByAuthor = catalog.findByAuthor(author);
         System.out.println("findByAuthor");
         booksByAuthor.stream().limit(limit).forEach(System.out::println);
+    }
+
+    private void findAndUpdate() {
+        System.out.println("Updating book...");
+        catalog.findOneByTitleAndAuthor("Pan Tadeusz", "Adam Mickiewicz")
+                .ifPresent(book -> {
+                    UpdateBookCommand command = new UpdateBookCommand(
+                            book.getId(),
+                            "Pan Tadeusz, czyli Ostatni Zajazd na Litwie",
+                            book.getAuthor(),
+                            book.getYear()
+                    );
+                    catalog.updateBook(command);
+                });
     }
 
     private void findByTitle() {

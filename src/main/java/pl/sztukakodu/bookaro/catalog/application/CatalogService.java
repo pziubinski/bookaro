@@ -1,11 +1,11 @@
 package pl.sztukakodu.bookaro.catalog.application;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import pl.sztukakodu.bookaro.catalog.application.port.CatalogUseCase;
 import pl.sztukakodu.bookaro.catalog.domain.Book;
@@ -34,12 +34,16 @@ class CatalogService implements CatalogUseCase {
 
     @Override
     public List<Book> findAll() {
-        return null;
+        return repository.findAll();
     }
 
     @Override
     public Optional<Book> findOneByTitleAndAuthor(String title, String author) {
-        return Optional.empty();
+        return repository.findAll()
+                .stream()
+                .filter(book -> book.getTitle().startsWith(title))
+                .filter(book -> book.getAuthor().startsWith(author))
+                .findFirst();
     }
 
     @Override
@@ -50,11 +54,18 @@ class CatalogService implements CatalogUseCase {
 
     @Override
     public void removeById(Long id) {
-
     }
 
     @Override
-    public void updateBook() {
-
+    public UpdateBookResponse updateBook(UpdateBookCommand command) {
+        return repository.findById(command.getId())
+                .map(book -> {
+                    book.setTitle(command.getTitle());
+                    book.setAuthor(command.getAuthor());
+                    book.setYear(command.getYear());
+                    repository.save(book);
+                    return UpdateBookResponse.SUCCESS;
+                })
+                .orElseGet(() -> new UpdateBookResponse(false, Arrays.asList("Book not found with id: " + command.getId())));
     }
 }
