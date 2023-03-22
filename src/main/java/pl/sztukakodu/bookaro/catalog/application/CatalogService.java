@@ -8,11 +8,14 @@ import org.springframework.stereotype.Service;
 import pl.sztukakodu.bookaro.catalog.application.port.CatalogUseCase;
 import pl.sztukakodu.bookaro.catalog.domain.Book;
 import pl.sztukakodu.bookaro.catalog.domain.CatalogRepository;
+import pl.sztukakodu.bookaro.uploads.application.port.UploadUseCase;
+import pl.sztukakodu.bookaro.uploads.domain.Upload;
 
 @Service
 @AllArgsConstructor
 class CatalogService implements CatalogUseCase {
     private final CatalogRepository repository;
+    private final UploadUseCase upload;
 
     @Override
     public List<Book> findAll() {
@@ -83,6 +86,20 @@ class CatalogService implements CatalogUseCase {
     @Override
     public void removeById(Long id) {
         repository.removeById(id);
+    }
+
+    @Override
+    public void updateBookCover(UpdateBoocCoverCommand command) {
+        repository.findById(command.getId())
+            .ifPresent(book -> {
+                Upload savedUpload = upload.save(new UploadUseCase.SaveUploadCommand(
+                    command.getFilename(),
+                    command.getFile(),
+                    command.getContentType()
+                ));
+                book.setCoverId(savedUpload.getId());
+                repository.save(book);
+            });
     }
 
     @Override
