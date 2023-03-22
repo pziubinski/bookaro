@@ -16,7 +16,7 @@ public class Book {
     private String title;
     private String author;
     private Integer year;
-    BigDecimal price;
+    private BigDecimal price;
 
     public Book(String title, String author, Integer year, BigDecimal price) {
         this.title = title;
