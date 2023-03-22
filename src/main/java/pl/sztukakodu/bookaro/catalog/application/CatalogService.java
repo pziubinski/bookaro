@@ -1,8 +1,6 @@
 package pl.sztukakodu.bookaro.catalog.application;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
@@ -89,12 +87,13 @@ class CatalogService implements CatalogUseCase {
 
     @Override
     public UpdateBookResponse updateBook(UpdateBookCommand command) {
-        return repository.findById(command.getId())
+        return repository
+            .findById(command.getId())
             .map(book -> {
                 Book updatedBook = command.updateFields(book);
                 repository.save(updatedBook);
                 return UpdateBookResponse.SUCCESS;
             })
-            .orElseGet(() -> new UpdateBookResponse(false, Arrays.asList("Book not found with id: " + command.getId())));
+            .orElseGet(() -> new UpdateBookResponse(false, Collections.singletonList("Book not found with id: " + command.getId())));
     }
 }
