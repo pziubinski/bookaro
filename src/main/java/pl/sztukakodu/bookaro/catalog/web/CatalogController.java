@@ -1,5 +1,9 @@
 package pl.sztukakodu.bookaro.catalog.web;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -48,7 +52,7 @@ public class CatalogController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Void> addBook(@RequestBody RestCreateBookCommand command) {
+    public ResponseEntity<Void> addBook(@Valid @RequestBody RestCreateBookCommand command) {
         Book book = catalog.addBook(command.toCommand());
         return ResponseEntity.created(createdBookUri(book)).build();
     }
@@ -65,9 +69,14 @@ public class CatalogController {
 
     @Data
     private static class RestCreateBookCommand {
+        @NotBlank
         private String title;
+        @NotBlank
         private String author;
+        @NotNull
         private Integer year;
+        @NotNull
+        @DecimalMin("0.00")
         private BigDecimal price;
 
         CreateBookCommand toCommand() {
